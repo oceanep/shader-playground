@@ -3,7 +3,7 @@ A little environment for me to test GLSL code and play with new shader ideas
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).
-Run this followed commands:
+Run the following commands:
 
 ``` bash
 # Install dependencies (only the first time)
