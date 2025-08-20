@@ -59,7 +59,7 @@ gui.add(material.uniforms.uFrequency.value, 'y').min(0).max(20).step(0.1).name('
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
-mesh.position.copy(new THREE.Vector3(-0.5, 0, 0))
+mesh.position.copy(new THREE.Vector3(-0.55, 0, 0))
 
 // Geometry 2
 const geometry2 = new THREE.PlaneGeometry(1 ,1 ,32 ,32)
@@ -70,7 +70,7 @@ const material2 = new THREE.MeshBasicMaterial({color: "red", wireframe: true})
 // Mesh
 const mesh2 = new THREE.Mesh(geometry2, material2)
 scene.add(mesh2)
-mesh2.position.copy(new THREE.Vector3(0.5, 0, 0))
+mesh2.position.copy(new THREE.Vector3(0.55, 0, 0))
 
 /**
  * Sizes
