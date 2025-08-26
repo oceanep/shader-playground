@@ -3,6 +3,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
 import testVertexShader from './shaders/test/vertex.glsl'
 import testFragmentShader from './shaders/test/fragment.glsl'
+import test2VertextShaer from './shaders/test2/vertex.glsl'
+import test2FragmentShader from './shaders/test2/fragment.glsl'
 import { BufferAttribute } from 'three'
 
 /**
@@ -65,8 +67,11 @@ mesh.position.copy(new THREE.Vector3(-0.55, 0, 0))
 const geometry2 = new THREE.PlaneGeometry(1 ,1 ,32 ,32)
 
 // Material
-const material2 = new THREE.MeshBasicMaterial({color: "red", wireframe: true})
-
+const material2 = new THREE.RawShaderMaterial({
+    vertexShader: test2VertextShaer,
+    fragmentShader: test2FragmentShader,
+    side: THREE.DoubleSide
+})
 // Mesh
 const mesh2 = new THREE.Mesh(geometry2, material2)
 scene.add(mesh2)
