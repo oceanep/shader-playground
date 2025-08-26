@@ -70,7 +70,10 @@ const geometry2 = new THREE.PlaneGeometry(1 ,1 ,32 ,32)
 const material2 = new THREE.RawShaderMaterial({
     vertexShader: test2VertextShaer,
     fragmentShader: test2FragmentShader,
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide,
+    uniforms: {
+        uTime: { value: 0.0}
+    }
 })
 // Mesh
 const mesh2 = new THREE.Mesh(geometry2, material2)
@@ -132,6 +135,7 @@ const tick = () =>
 
     // Update material
     material.uniforms.uTime.value = elapsedTime
+    material2.uniforms.uTime.value = elapsedTime
 
     // Update controls
     controls.update()
