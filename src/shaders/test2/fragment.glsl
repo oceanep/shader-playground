@@ -300,18 +300,22 @@ void main() {
     // float strength = mod(vUv.y * 10.0 - uTime, 1.0);
 
     // Pattern 15
-    float modifier = mod(uTime, 1.0);
-    float x_axis = step(0.8, mod(vUv.y * 10.0 + modifier, 1.0)) * step(0.4, mod(vUv.x * 10.0, 1.0));
-    float y_axis = step(0.4, mod(vUv.y * 10.0, 1.0)) * step(0.8, mod(vUv.x * 10.0 + modifier, 1.0));
+    // float modifier = mod(uTime, 1.0);
+    // float x_axis = step(0.8, mod(vUv.y * 10.0 + modifier, 1.0)) * step(0.4, mod(vUv.x * 10.0, 1.0));
+    // float y_axis = step(0.4, mod(vUv.y * 10.0, 1.0)) * step(0.8, mod(vUv.x * 10.0 + modifier, 1.0));
+    // float strength = x_axis + y_axis;
 
-    float strength = x_axis + y_axis;
+    //Pattern 22
+    float x = floor(vUv.x * 10.0) / mod(uTime, 10.0);
+    float y = floor(vUv.y * 10.0) / 10.0;
+    float strength = x * y;
 
     // Clamp strength
     strength = clamp(strength, 0.0, 1.0);
 
     // Colored version
     vec3 black_c = vec3(0.0);
-    vec3 uv_c = vec3(vUv, 1.0);
+    vec3 uv_c = vec3(vUv * sin(uTime), 1.0);
     vec3 mixedColor = mix(black_c, uv_c, strength);
 
     gl_FragColor = vec4(mixedColor, 1.0);
