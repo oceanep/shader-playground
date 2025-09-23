@@ -27,7 +27,8 @@ const meshData = [
         subdivision: 128,
         rawShaderBase: false,
         vertexShader: ragingSeaVertexShader,
-        fragmentShader: ragingSeaFragmentShader
+        fragmentShader: ragingSeaFragmentShader,
+        color: [0.5, 0.8, 1.0]
     }
 ]
 
@@ -97,6 +98,7 @@ for (let i = 0; i < meshCount; i++) {
 }
 
 // Index Specific Geometry Modifications
+
 // Add random bump noise to first geometry only
 const count = geometries[0].attributes.position.count
 const random = new Float32Array(count)
@@ -114,7 +116,9 @@ for (let i = 0; i < meshCount; i++) {
         transparent: true,
         uniforms: {
             uTime: { value: 0.0 },
-            uColor: { value: new THREE.Color() },
+            uColor: meshData[i]?.color 
+                ? { value: new THREE.Color(meshData[i]?.color[0], meshData[i]?.color[1], meshData[i]?.color[2])}
+                : { value: new THREE.Color() }, 
             uTexture: { value: flagTexture }
         }
     }
@@ -128,8 +132,20 @@ for (let i = 0; i < meshCount; i++) {
 // Index Specific Material Modifications
 materials[0].uniforms.uFrequency = { value: new THREE.Vector2(15.0, 7.5) }
 
-gui.add(materials[0].uniforms.uFrequency.value, 'x').min(0).max(20).step(0.1).name('frequencyX')
-gui.add(materials[0].uniforms.uFrequency.value, 'y').min(0).max(20).step(0.1).name('frequencyY')
+materials[2].uniforms.uWaveFrequency = { value: new THREE.Vector2(4.0, 1.5) }
+materials[2].uniforms.uWaveAmplitude = { value: 0.2}
+materials[2].uniforms.uWaveSpeed = { value: 0.75 }
+
+// Debug
+// mesh 1
+gui.add(materials[0].uniforms.uFrequency.value, 'x').min(0).max(20).step(0.1).name('mesh1_frequencyX')
+gui.add(materials[0].uniforms.uFrequency.value, 'y').min(0).max(20).step(0.1).name('mesh1_frequencyY')
+
+// mesh 3
+gui.add(materials[2].uniforms.uWaveAmplitude, 'value').min(0).max(1.0).step(0.001).name('mesh3_uWaveAmplitude')
+gui.add(materials[2].uniforms.uWaveFrequency.value, 'x').min(0).max(10.0).step(0.1).name('mesh3_uWaveFrequencyX')
+gui.add(materials[2].uniforms.uWaveFrequency.value, 'y').min(0).max(10.0).step(0.1).name('mesh3_uWaveFrequencyX')
+gui.add(materials[2].uniforms.uWaveSpeed, 'value').min(0).max(5.0).step(0.01).name('mesh3_uWaveSpeed')
 
 // Mesh
 for(let i = 0; i < meshCount; i++) {
@@ -145,6 +161,12 @@ for(let i = 0; i < meshCount; i++) {
     )
     meshes.push(mesh)
 }
+
+// Index Specific Mesh Modifications
+
+// Rotate wave mesh for better visibility
+meshes[2].rotation.x = - Math.PI / 2
+// meshes[2].rotation.z = - Math.PI / 4
 
 /**
  * Sizes
@@ -201,7 +223,7 @@ const tick = () =>
 
     // Update material
     materials.forEach((material, i) => {
-        material.uniforms.uTime.value = elapsedTime * (i + 1)
+        material.uniforms.uTime.value = elapsedTime + i
     })
 
     // Update controls
