@@ -3,15 +3,33 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
 import testVertexShader from './shaders/test/vertex.glsl'
 import testFragmentShader from './shaders/test/fragment.glsl'
-import test2VertextShaer from './shaders/test2/vertex.glsl'
+import test2VertextShader from './shaders/test2/vertex.glsl'
 import test2FragmentShader from './shaders/test2/fragment.glsl'
 import ragingSeaVertexShader from './shaders/ragingSea/vertex.glsl'
 import ragingSeaFragmentShader from './shaders/ragingSea/fragment.glsl'
 import { BufferAttribute } from 'three'
 
 // Collect Shaders
-const vertexShaders = [testVertexShader, test2VertextShaer, ragingSeaVertexShader]
-const fragmentShaders = [testFragmentShader, test2FragmentShader, ragingSeaFragmentShader]
+const meshData = [
+    {
+        subdivision: 32,
+        rawShaderBase: true,
+        vertexShader: testVertexShader,
+        fragmentShader: testFragmentShader,
+    },
+    {
+        subdivision: 32,
+        rawShaderBase: true,
+        vertexShader: test2VertextShader,
+        fragmentShader: test2FragmentShader,
+    },
+    {
+        subdivision: 128,
+        rawShaderBase: false,
+        vertexShader: ragingSeaVertexShader,
+        fragmentShader: ragingSeaFragmentShader
+    }
+]
 
 /**
  * Base
@@ -36,7 +54,7 @@ const flagTexture = textureLoader.load('/textures/dk_bg.jpg')
  * Test meshes
  */
 // Geometries
-const meshCount = vertexShaders.length // Number of meshes you want
+const meshCount = meshData.length // Number of meshes you want
 const meshWidth = 1 // Width of each mesh
 const meshHeight = 1 // Height of each mesh
 const spacing = 0.1 // Space between meshes
@@ -69,7 +87,12 @@ const materials = []
 const meshes = []
 
 for (let i = 0; i < meshCount; i++) {
-    const geometry = new THREE.PlaneGeometry(meshWidth, 1, 32, 32)
+    const geometry = new THREE.PlaneGeometry(
+        meshWidth, 
+        1, 
+        meshData[i].subdivision, 
+        meshData[i].subdivision
+    )
     geometries.push(geometry)
 }
 
@@ -84,9 +107,9 @@ geometries[0].setAttribute('aRandom', new BufferAttribute(random, 1))
 
 // Materials
 for (let i = 0; i < meshCount; i++) {
-    const material = new THREE.RawShaderMaterial({
-        vertexShader: vertexShaders[i],
-        fragmentShader: fragmentShaders[i],
+    const _args = {
+        vertexShader: meshData[i].vertexShader,
+        fragmentShader: meshData[i].fragmentShader,
         side: THREE.DoubleSide,
         transparent: true,
         uniforms: {
@@ -94,7 +117,10 @@ for (let i = 0; i < meshCount; i++) {
             uColor: { value: new THREE.Color() },
             uTexture: { value: flagTexture }
         }
-    })
+    }
+    const material = meshData[i].rawShaderBase 
+        ? new THREE.RawShaderMaterial(_args) 
+        : new THREE.ShaderMaterial(_args)
     
     materials.push(material)
 }

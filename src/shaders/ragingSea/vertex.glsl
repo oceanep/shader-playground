@@ -1,11 +1,3 @@
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 modelMatrix;
-uniform float uTime;
-
-attribute vec3 position;
-attribute vec2 uv;
-
 varying vec2 vUv;
 
 void main()
