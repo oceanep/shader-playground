@@ -5,11 +5,13 @@ import testVertexShader from './shaders/test/vertex.glsl'
 import testFragmentShader from './shaders/test/fragment.glsl'
 import test2VertextShaer from './shaders/test2/vertex.glsl'
 import test2FragmentShader from './shaders/test2/fragment.glsl'
+import ragingSeaVertexShader from './shaders/ragingSea/vertex.glsl'
+import ragingSeaFragmentShader from './shaders/ragingSea/fragment.glsl'
 import { BufferAttribute } from 'three'
 
 // Collect Shaders
-const vertexShaders = [testVertexShader, test2VertextShaer]
-const fragmentShaders = [testFragmentShader, test2FragmentShader]
+const vertexShaders = [testVertexShader, test2VertextShaer, ragingSeaVertexShader]
+const fragmentShaders = [testFragmentShader, test2FragmentShader, ragingSeaFragmentShader]
 
 /**
  * Base
@@ -34,36 +36,41 @@ const flagTexture = textureLoader.load('/textures/dk_bg.jpg')
  * Test meshes
  */
 // Geometries
-const meshCount = vertexShaders.length; // Number of meshes you want
-const meshWidth = 1; // Width of each mesh
-const meshHeight = 1; // Height of each mesh
-const spacing = 0.1; // Space between meshes
-const maxPerRow = 4; // Maximum meshes per row
-const verticalSpacing = 0.1; // Space between rows
+const meshCount = vertexShaders.length // Number of meshes you want
+const meshWidth = 1 // Width of each mesh
+const meshHeight = 1 // Height of each mesh
+const spacing = 0.1 // Space between meshes
+const maxPerRow = 2 // Maximum meshes per row
+const verticalSpacing = 0.1 // Space between rows
 
 // Calculate grid position
 const getGridPosition = (index) => {
-    const row = Math.floor(index / maxPerRow);
-    const col = index % maxPerRow;
+    const row = Math.floor(index / maxPerRow)
+    const col = index % maxPerRow
     
     // Calculate total width for centering each row
-    const itemsInThisRow = Math.min(meshCount - row * maxPerRow, maxPerRow);
-    const rowWidth = (meshWidth * itemsInThisRow) + (spacing * (itemsInThisRow - 1));
-    const rowStartX = -rowWidth / 2 + meshWidth / 2;
+    const itemsInThisRow = Math.min(meshCount - row * maxPerRow, maxPerRow)
+    const amtRows = Math.ceil(meshCount / maxPerRow)
+
+    const rowWidth = (meshWidth * itemsInThisRow) + (spacing * (itemsInThisRow - 1))
+    const rowsHeight = (amtRows * meshHeight) + (verticalSpacing * (amtRows - 1))
+
+    const rowStartX = -rowWidth / 2 + meshWidth / 2
+    const rowStartY = rowsHeight / 2 - meshHeight / 2
     
     return {
         x: rowStartX + col * (meshWidth + spacing),
-        y: row * -(meshHeight + verticalSpacing)
-    };
-};
+        y: rowStartY + row * -(meshHeight + verticalSpacing)
+    }
+}
 
 const geometries = []
 const materials = []
 const meshes = []
 
 for (let i = 0; i < meshCount; i++) {
-    const geometry = new THREE.PlaneGeometry(meshWidth, 1, 32, 32);
-    geometries.push(geometry);
+    const geometry = new THREE.PlaneGeometry(meshWidth, 1, 32, 32)
+    geometries.push(geometry)
 }
 
 // Index Specific Geometry Modifications
@@ -110,7 +117,7 @@ for(let i = 0; i < meshCount; i++) {
             0
         )
     )
-    meshes.push(mesh);
+    meshes.push(mesh)
 }
 
 /**
