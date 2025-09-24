@@ -4,6 +4,7 @@ uniform float uWaveSpeed;
 uniform float uTime;
 
 varying vec2 vUv;
+varying float vElevation;
 
 void main()
 {
@@ -21,4 +22,5 @@ void main()
     gl_Position = projectionPosition;
     
     vUv = uv;
+    vElevation = elevation;
 }
