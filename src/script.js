@@ -9,7 +9,7 @@ import ragingSeaVertexShader from './shaders/ragingSea/vertex.glsl'
 import ragingSeaFragmentShader from './shaders/ragingSea/fragment.glsl'
 import { BufferAttribute } from 'three'
 
-// Collect Shaders
+// Collect Shaders and other Mesh Metadata
 const meshData = [
     {
         subdivision: 32,
@@ -24,14 +24,14 @@ const meshData = [
         fragmentShader: test2FragmentShader,
     },
     {
-        subdivision: 128,
+        subdivision: 256,
         rawShaderBase: false,
         vertexShader: ragingSeaVertexShader,
         fragmentShader: ragingSeaFragmentShader,
         color: 'rgb(50%, 80%, 100%)',
         debugColors: {
-            depthColor: '#001a4d',
-            surfaceColor: '#9a95ea'
+            depthColor: '#002775',
+            surfaceColor: '#b0abf8'
         }
     }
 ]
@@ -103,6 +103,7 @@ for (let i = 0; i < meshCount; i++) {
 
 // Index Specific Geometry Modifications
 
+// mesh 1
 // Add random bump noise to first geometry only
 const count = geometries[0].attributes.position.count
 const random = new Float32Array(count)
@@ -134,26 +135,44 @@ for (let i = 0; i < meshCount; i++) {
 }
 
 // Index Specific Material Modifications
+// mesh 1 uniforms
 materials[0].uniforms.uFrequency = { value: new THREE.Vector2(15.0, 7.5) }
 
+// mesh 2 uniforms
+
+// mesh 3 uniforms
 materials[2].uniforms.uWaveFrequency = { value: new THREE.Vector2(5.0, 6.5) }
 materials[2].uniforms.uWaveAmplitude = { value: 0.165}
 materials[2].uniforms.uWaveSpeed = { value: 2.0 }
+
+materials[2].uniforms.uSmWaveFrequency = { value: 8.5 }
+materials[2].uniforms.uSmWaveAmplitude = { value: 0.09 }
+materials[2].uniforms.uSmWaveSpeed = { value: 0.8 }
+materials[2].uniforms.uSmWaveIterations = { value: 4.0 }
+
 materials[2].uniforms.uWaveDepthColor = { value: new THREE.Color(meshData[2].debugColors.depthColor) }
 materials[2].uniforms.uWaveSurfaceColor = { value: new THREE.Color(meshData[2].debugColors.surfaceColor) }
-materials[2].uniforms.uColorOffset = { value: 0.2 }
-materials[2].uniforms.uColorMultiplier = { value: 5.0 }
+materials[2].uniforms.uColorOffset = { value: 0.25 }
+materials[2].uniforms.uColorMultiplier = { value: 5.5 }
 
 // Debug
-// mesh 1
+// mesh 1 gui
 gui.add(materials[0].uniforms.uFrequency.value, 'x').min(0).max(20).step(0.1).name('mesh1_frequencyX')
 gui.add(materials[0].uniforms.uFrequency.value, 'y').min(0).max(20).step(0.1).name('mesh1_frequencyY')
 
-// mesh 3
+// mesh 2 gui
+
+// mesh 3 gui
 gui.add(materials[2].uniforms.uWaveAmplitude, 'value').min(0).max(1.0).step(0.001).name('mesh3_uWaveAmplitude')
 gui.add(materials[2].uniforms.uWaveFrequency.value, 'x').min(0).max(10.0).step(0.1).name('mesh3_uWaveFrequencyX')
 gui.add(materials[2].uniforms.uWaveFrequency.value, 'y').min(0).max(10.0).step(0.1).name('mesh3_uWaveFrequencyZ')
 gui.add(materials[2].uniforms.uWaveSpeed, 'value').min(0).max(5.0).step(0.01).name('mesh3_uWaveSpeed')
+
+gui.add(materials[2].uniforms.uSmWaveAmplitude, 'value').min(0).max(2.0).step(0.001).name('mesh3_uSmWaveAmplitude')
+gui.add(materials[2].uniforms.uSmWaveFrequency, 'value').min(0).max(30.0).step(0.01).name('mesh3_uSmWaveFrequency')
+gui.add(materials[2].uniforms.uSmWaveSpeed, 'value').min(0).max(3.0).step(0.01).name('mesh3_uSmWaveSpeed')
+gui.add(materials[2].uniforms.uSmWaveIterations, 'value').min(0).max(8.0).step(1).name('mesh3_uSmWaveIterations')
+
 gui.addColor(
         meshData[2].debugColors, 'depthColor'
     ).onChange(() => {
@@ -184,9 +203,9 @@ for(let i = 0; i < meshCount; i++) {
 
 // Index Specific Mesh Modifications
 
+// mesh 3 
 // Rotate wave mesh for better visibility
 meshes[2].rotation.x = - Math.PI / 2
-// meshes[2].rotation.z = - Math.PI / 4
 
 /**
  * Sizes
